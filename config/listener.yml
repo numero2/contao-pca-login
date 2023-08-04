@@ -1,0 +1,6 @@
+services:
+    _defaults:
+        public: true
+
+    numero2.pca_login.listener.data_container.module:
+        class: numero2\PCALoginBundle\EventListener\DataContainer\ModuleListener

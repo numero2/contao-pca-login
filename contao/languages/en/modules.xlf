@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<xliff version="1.1">
+<file>
+<body>
+    <trans-unit id="FMD.loginPCA.0">
+        <target>Login-Formular (PCA)</target>
+    </trans-unit>
+</body>
+</file>
+</xliff>

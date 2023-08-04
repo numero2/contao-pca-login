@@ -1,0 +1,39 @@
+{
+    "name": "numero2/contao-pca-login",
+    "type": "contao-bundle",
+    "description": "Allows members to login to Contao using their PCA card number",
+    "license": "proprietary",
+    "authors": [
+        {
+            "name": "numero2 - Agentur für digitales Marketing GbR",
+            "homepage": "https://numero2.de"
+        }
+    ],
+    "require": {
+        "contao/core-bundle": "^4.13 || ^5.0"
+    },
+    "require-dev": {
+        "contao/manager-plugin": "^2.0"
+    },
+    "conflict": {
+        "contao/core": "*",
+        "contao/manager-plugin": "<2.0 || >=3.0"
+    },
+    "extra": {
+        "contao-manager-plugin": "numero2\\PCALoginBundle\\ContaoManager\\Plugin"
+    },
+    "autoload": {
+        "psr-4": {
+            "numero2\\PCALoginBundle\\": "src/"
+        },
+        "classmap": [
+            "contao/"
+        ],
+        "exclude-from-classmap": [
+            "contao/config/",
+            "contao/dca/",
+            "contao/languages/",
+            "contao/templates/"
+        ]
+    }
+}
