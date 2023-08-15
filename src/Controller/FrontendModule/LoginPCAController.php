@@ -250,6 +250,10 @@ class LoginPCAController extends AbstractFrontendModuleController {
             
             $member->login = 1;
             $member->username = $cardID;
+            
+            // save and refresh member otherwise some fields might have some incorrect default values
+            $member->save();
+            $member->refresh();
         }
 
         // check if account is still active and unlocked
