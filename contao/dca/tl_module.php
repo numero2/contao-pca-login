@@ -4,7 +4,7 @@
  * PCA login bundle for Contao Open Source CMS
  *
  * @author    Benny Born <benny.born@numero2.de>
- * @license   Commercial
+ * @license   LGPL
  * @copyright Copyright (c) 2023, numero2 - Agentur für digitales Marketing GbR
  */
 

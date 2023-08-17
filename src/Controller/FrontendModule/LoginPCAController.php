@@ -4,7 +4,7 @@
  * PCA login bundle for Contao Open Source CMS
  *
  * @author    Benny Born <benny.born@numero2.de>
- * @license   Commercial
+ * @license   LGPL
  * @copyright Copyright (c) 2023, numero2 - Agentur für digitales Marketing GbR
  */
 
@@ -109,33 +109,33 @@ class LoginPCAController extends AbstractFrontendModuleController {
         }
 
         // If the form was submitted and the credentials were wrong, take the target
-		// path from the submitted data as otherwise it would take the current page
-		if( $request && $request->isMethod('POST') ) {
+        // path from the submitted data as otherwise it would take the current page
+        if( $request && $request->isMethod('POST') ) {
 
-			$this->targetPath = base64_decode($request->request->get('_target_path'));
+            $this->targetPath = base64_decode($request->request->get('_target_path'));
 
-		} elseif( $request && $module->redirectBack ) {
+        } elseif( $request && $module->redirectBack ) {
 
-			if( $request->query->has('redirect') ) {
+            if( $request->query->has('redirect') ) {
 
-				$uriSigner = System::getContainer()->get('uri_signer');
+                $uriSigner = System::getContainer()->get('uri_signer');
 
-				// We cannot use $request->getUri() here as we want to work with the original URI (no query string reordering)
-				if( $uriSigner->check($request->getSchemeAndHttpHost() . $request->getBaseUrl() . $request->getPathInfo() . (null !== ($qs = $request->server->get('QUERY_STRING')) ? '?' . $qs : '')) ) {
-					$this->targetPath = $request->query->get('redirect');
-				}
-			
+                // We cannot use $request->getUri() here as we want to work with the original URI (no query string reordering)
+                if( $uriSigner->check($request->getSchemeAndHttpHost() . $request->getBaseUrl() . $request->getPathInfo() . (null !== ($qs = $request->server->get('QUERY_STRING')) ? '?' . $qs : '')) ) {
+                    $this->targetPath = $request->query->get('redirect');
+                }
+            
             } elseif( $referer = $request->headers->get('referer') ) {
-				
+                
                 $refererUri = new Uri($referer);
-				$requestUri = new Uri($request->getUri());
+                $requestUri = new Uri($request->getUri());
 
-				// Use the HTTP referer as a fallback, but only if scheme and host matches with the current request (see #5860)
-				if( $refererUri->getScheme() === $requestUri->getScheme() && $refererUri->getHost() === $requestUri->getHost() && $refererUri->getPort() === $requestUri->getPort() ) {
-					$this->targetPath = (string) $refererUri;
-				}
-			}
-		}
+                // Use the HTTP referer as a fallback, but only if scheme and host matches with the current request (see #5860)
+                if( $refererUri->getScheme() === $requestUri->getScheme() && $refererUri->getHost() === $requestUri->getHost() && $refererUri->getPort() === $requestUri->getPort() ) {
+                    $this->targetPath = (string) $refererUri;
+                }
+            }
+        }
 
         return parent::__invoke($request, $module, $section, $classes);
     }
@@ -147,7 +147,7 @@ class LoginPCAController extends AbstractFrontendModuleController {
     protected function getResponse( Template $template, ModuleModel $model, Request $request ): ?Response {
 
         $exception = null;
-		$lastUsername = '';
+        $lastUsername = '';
 
         $template->requestToken = $this->tokenManager->getDefaultTokenValue();
         
@@ -155,9 +155,9 @@ class LoginPCAController extends AbstractFrontendModuleController {
 
         $template->formId = 'tl_pca_login_' . $model->id;
         $template->username = $GLOBALS['TL_LANG']['MSC']['username'];
-		$template->password = $GLOBALS['TL_LANG']['MSC']['password'][0];
-		$template->autologin = $model->autologin;
-		$template->autoLabel = $GLOBALS['TL_LANG']['MSC']['autologin'];
+        $template->password = $GLOBALS['TL_LANG']['MSC']['password'][0];
+        $template->autologin = $model->autologin;
+        $template->autoLabel = $GLOBALS['TL_LANG']['MSC']['autologin'];
 
         $pageID = $request->get('pageModel');
         $page = PageModel::findById($pageID);
@@ -167,29 +167,29 @@ class LoginPCAController extends AbstractFrontendModuleController {
 
             $strRedirect = Environment::get('uri');
 
-			// Redirect to last page visited
-			if( $model->redirectBack && $this->targetPath ) {
-			
+            // Redirect to last page visited
+            if( $model->redirectBack && $this->targetPath ) {
+            
                 $strRedirect = $this->targetPath;
-			
+            
             // Redirect home if the page is protected
-			} elseif( $page->protected ) {
+            } elseif( $page->protected ) {
 
-				$strRedirect = Environment::get('base');
-			}
+                $strRedirect = Environment::get('base');
+            }
 
-			$user = FrontendUser::getInstance();
+            $user = FrontendUser::getInstance();
 
-			$template->logout = true;
-			$template->formId = 'tl_pca_logout_' . $model->id;
-			$template->slabel = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['logout']);
-			$template->loggedInAs = sprintf($GLOBALS['TL_LANG']['MSC']['loggedInAs'], $user->username);
-			$template->action = $this->logoutURLGenerator->getLogoutPath();
-			$template->targetPath = StringUtil::specialchars($strRedirect);
+            $template->logout = true;
+            $template->formId = 'tl_pca_logout_' . $model->id;
+            $template->slabel = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['logout']);
+            $template->loggedInAs = sprintf($GLOBALS['TL_LANG']['MSC']['loggedInAs'], $user->username);
+            $template->action = $this->logoutURLGenerator->getLogoutPath();
+            $template->targetPath = StringUtil::specialchars($strRedirect);
 
-			if( $user->lastLogin > 0 ) {
-				$template->lastLogin = sprintf($GLOBALS['TL_LANG']['MSC']['lastLogin'][1], Date::parse($page->datimFormat, $user->lastLogin));
-			}
+            if( $user->lastLogin > 0 ) {
+                $template->lastLogin = sprintf($GLOBALS['TL_LANG']['MSC']['lastLogin'][1], Date::parse($page->datimFormat, $user->lastLogin));
+            }
 
             return $template->getResponse();
         }
@@ -197,17 +197,17 @@ class LoginPCAController extends AbstractFrontendModuleController {
         if( $this->lastAuthException instanceof AuthenticationException ) {
 
             $template->hasError = true;
-			$template->message = $GLOBALS['TL_LANG']['ERR']['invalidLogin'];
+            $template->message = $GLOBALS['TL_LANG']['ERR']['invalidLogin'];
         }
 
-		$blnRedirectBack = false;
-		$strRedirect = Environment::get('base') . Environment::get('request');
+        $blnRedirectBack = false;
+        $strRedirect = Environment::get('base') . Environment::get('request');
 
-		$template->forceTargetPath = (int) $blnRedirectBack;
-		$template->targetPath = StringUtil::specialchars(base64_encode($strRedirect));
+        $template->forceTargetPath = (int) $blnRedirectBack;
+        $template->targetPath = StringUtil::specialchars(base64_encode($strRedirect));
 
-		$template->slabel = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['login']);
-		$template->value = Input::encodeInsertTags(StringUtil::specialchars($lastUsername));
+        $template->slabel = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['login']);
+        $template->value = Input::encodeInsertTags(StringUtil::specialchars($lastUsername));
 
         return $template->getResponse();
     }
